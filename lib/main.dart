@@ -1,115 +1,294 @@
-import 'package:flutter/material.dart';
+// ignore_for_file: prefer_const_constructors
 
-void main() {
+import 'package:star_home/routes.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:star_home/pages/about_page.dart';
+import 'package:star_home/pages/home_page.dart';
+import 'package:star_home/pages/loading.dart';
+import 'package:star_home/pages/onboarding_page.dart';
+import 'package:star_home/pages/profile_page.dart';
+
+import 'package:star_home/values/color.dart';
+import 'package:star_home/values/dimens.dart';
+import 'package:star_home/values/text_styles.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'dart:io' show Platform;
+import 'dart:developer';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:page_transition/page_transition.dart';
+
+Future<void> main(context) async {
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setSystemUIOverlayStyle(
+      const SystemUiOverlayStyle(statusBarColor: AppColor.primary));
+  SystemChrome.setPreferredOrientations(
+      [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+  await Firebase.initializeApp();
   runApp(const MyApp());
 }
+Map<String, dynamic> dataa = {
+  'name': 'Captain!',
+  'url': '',
+};
+String namer = "Captain!";
 
-class MyApp extends StatelessWidget {
+
+final firestoreInstance = FirebaseFirestore.instance;
+User? firebaseUser = FirebaseAuth.instance.currentUser;
+
+class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
 
-  // This widget is the root of your application.
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
-        primarySwatch: Colors.blue,
+    String app = OnboardingPage.route;
+
+    try {
+      User? firebaseUserr = FirebaseAuth.instance.currentUser;
+      var user = firebaseUserr ?? null;
+
+      if (user?.uid != null) {
+        app = LoadingPage.route;
+      }
+    } catch (e) {
+      log(e.toString());
+    }
+
+
+    return ScreenUtilInit(
+
+        builder: (BuildContext context,child) => MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: "Android Club",
+        theme: ThemeData(
+            primaryColor: AppColor.primary,
+            secondaryHeaderColor: AppColor.secondary,
+            textTheme:
+            GoogleFonts.poppinsTextTheme(Theme.of(context).textTheme)),
+        initialRoute: app,
+        routes: getRoutes(),
+      )
+    );
+
+  }
+}
+
+class Navigation extends StatefulWidget {
+  static String route = 'navigation';
+  const Navigation({Key? key}) : super(key: key);
+
+  @override
+  State<Navigation> createState() => _NavigationState();
+}
+
+class _NavigationState extends State<Navigation> {
+  int _selectedIndex = 0;
+
+  static final List<Widget> _pages = [
+    const HomePage(),
+    //const RegisteredEventPage(),
+    const AboutPage(),
+  ];
+
+  void _onItemTapped(int index) {
+    if (index != 2) {
+      setState(() {
+        _selectedIndex = index;
+      });
+    } else {
+      Navigator.of(context).push(PageTransition(
+          child: AboutPage(),
+          type: PageTransitionType.rightToLeft,
+          curve: Curves.easeOutSine,
+          reverseDuration: Duration(milliseconds: 150),
+          duration: Duration(milliseconds: 200)));
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    CollectionReference users = FirebaseFirestore.instance.collection('users');
+    var totalHeight;
+    var totalWidth;
+    if (Platform.isAndroid) {
+      totalHeight = MediaQuery.of(context).size.height;
+      totalWidth = MediaQuery.of(context).size.width;
+    } else if (Platform.isIOS) {
+      totalHeight = MediaQuery.of(context).size.height + 20;
+      totalWidth = MediaQuery.of(context).size.width + 20;
+    }
+
+    // Profile Icon on AppBar
+    Widget profileIcon() {
+      return GestureDetector(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const ProfilePage(),
+            ),
+          );
+          //do what you want here
+        },
+        child: Container(
+          margin: const EdgeInsets.all(0),
+          padding: const EdgeInsets.all(0),
+          height: totalHeight * 0.075,
+          width: totalHeight * 0.075,
+          child: FutureBuilder<DocumentSnapshot>(
+            future: users.doc(firebaseUser!.uid).get(),
+            builder: (BuildContext context,
+                AsyncSnapshot<DocumentSnapshot> snapshot) {
+
+              if (snapshot.connectionState == ConnectionState.done) {
+                Map<String, dynamic> data =
+                snapshot.data!.data() as Map<String, dynamic>;
+                dataa = data;
+                namer = data['name'];
+                return Hero(
+                  tag: "profileIcon",
+                  child: CircleAvatar(
+                    radius: 70.0,
+                    foregroundImage:
+                    CachedNetworkImageProvider('${dataa['profilePic']}'),
+                    backgroundImage:
+                    CachedNetworkImageProvider('${dataa['profilePic']}'),
+                    backgroundColor: Colors.black45,
+                  ),
+                );
+              }
+              return CircleAvatar(
+                radius: 70.0,
+                foregroundImage: CachedNetworkImageProvider('${dataa['profilePic']}'),
+                backgroundImage: AssetImage("assets/images/loader.gif"),
+                backgroundColor: Colors.transparent,
+              );
+            },
+          ),
+        ),
+      );
+    }
+
+    // Main
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+        value: SystemUiOverlayStyle.light,
+        child: Platform.isAndroid
+            ? SafeArea(
+            child: theApp(totalHeight, totalWidth, users, profileIcon))
+            : theApp(totalHeight, totalWidth, users, profileIcon));
+  }
+
+  Scaffold theApp(totalHeight, totalWidth, CollectionReference<Object?> users,
+      Widget Function() profileIcon) {
+    return Scaffold(
+      body: Stack(
+        children: [
+          _pages.elementAt(_selectedIndex),
+          Align(
+              alignment: Alignment.bottomCenter,
+              child: bottomNav(totalHeight * 0.01, totalWidth * 0.1)),
+          if (_selectedIndex <= 1) ...[
+            Hero(
+              tag: "app_bar",
+              child: SvgPicture.asset(
+                'assets/ui/app_bar.svg',
+                semanticsLabel: 'App Bar',
+                color: AppColor.primary,
+                alignment: Alignment.topCenter,
+              ),
+            ),
+            Positioned(
+              top: 30.w,
+              left: 30.w,
+              child: Text(
+                "Hello!",
+                style: mediumTextWhite,
+              ),
+            ),
+            Positioned(
+              top: 50.w,
+              left: 30.w,
+              child: FutureBuilder<DocumentSnapshot>(
+                future: users.doc(firebaseUser!.uid).get(),
+                builder: (BuildContext context,
+                    AsyncSnapshot<DocumentSnapshot> snapshot) {
+
+                  if (snapshot.connectionState == ConnectionState.done) {
+                    Map<String, dynamic> data =
+                    snapshot.data!.data() as Map<String, dynamic>;
+                    dataa = data;
+                    return Text(dataa['name'].split(' ')[0],
+                        style: headingStyleWhite);
+                  }
+                  return Text(dataa['name'].split(' ')[0],
+                      style: headingStyleWhite);
+
+                },
+              ),
+
+            ),
+            Positioned(
+              top: 15.w,
+              right: 30.w,
+              child: profileIcon(),
+            )
+          ]
+        ],
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
-}
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key, required this.title}) : super(key: key);
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
-    return Scaffold(
-      appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
+  // Bottom Nav
+  Widget bottomNav(height, width) {
+    return Container(
+      height: AppDimens.bottomNavHeight,
+      margin: EdgeInsets.symmetric(horizontal: width, vertical: height),
+      decoration: const BoxDecoration(
+        color: Colors.transparent,
+        borderRadius: BorderRadius.only(
+          bottomLeft: Radius.circular(250),
+        ),
       ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug painting" (press "p" in the console, choose the
-          // "Toggle Debug Paint" action from the Flutter Inspector in Android
-          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-          // to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(AppDimens.bottomNavCRaduis),
+        child: BottomNavigationBar(
+          type: BottomNavigationBarType.fixed,
+          showSelectedLabels: true,
+          showUnselectedLabels: true,
+          backgroundColor: AppColor.bottomBar,
+          selectedItemColor: Colors.white,
+          unselectedItemColor: Colors.white.withOpacity(.60),
+          selectedFontSize: 10,
+          unselectedFontSize: 10,
+          onTap: _onItemTapped,
+          currentIndex: _selectedIndex,
+          items: const [
+            BottomNavigationBarItem(
+              label: 'Home',
+              icon: Icon(Icons.home_rounded),
             ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
+            // BottomNavigationBarItem(
+            //   label: 'Events',
+            //   icon: Icon(Icons.event_available_rounded),
+            // ),
+            BottomNavigationBarItem(
+              label: 'About',
+              icon: Icon(Icons.feed),
             ),
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
