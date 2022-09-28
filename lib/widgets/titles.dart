@@ -14,7 +14,7 @@ class Title1 extends StatelessWidget {
     return Align(
       alignment: Alignment.center,
       child: Padding(
-        padding: EdgeInsets.only(bottom: totalHeight * 0.02),
+        padding: EdgeInsets.only(bottom: totalHeight * 0.0),
         child: Text(
           text,
           style: headingStyle,

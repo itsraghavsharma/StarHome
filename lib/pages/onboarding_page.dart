@@ -67,7 +67,7 @@ class OnboardingPage extends StatelessWidget {
                       height: 50.h,
                     ),
                     Text(
-                      "Star Home provides best IOT automation solution for your home. Login to your account from any phone and access your home appliances from any part of the world.",
+                      "Star Home provides best IOT automation solution for your home.",
                       style: lightText,
                       textAlign: TextAlign.center,
                     ),

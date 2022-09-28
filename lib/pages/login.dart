@@ -16,7 +16,8 @@ import 'dart:developer';
 import 'package:star_home/widgets/googleAuth.dart';
 import 'package:star_home/widgets/GithubAuth.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:star_home/main.dart';
+import 'package:star_home/routes.dart';
+import '../main.dart';
 import 'AdditionalRegiterationPage.dart';
 import 'package:star_home/pages/register_page.dart';
 
@@ -174,22 +175,22 @@ class LoginPage extends StatelessWidget {
                                   log('Proceeding...');
                                   //loader(context);
                                   Navigator.pop(context);
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                          const LoadingPage()));
+                                  Navigator.of(context)
+                                      .pushNamedAndRemoveUntil(
+                                    LoadingPage.route,
+                                        (Route<dynamic> route) => false,
+                                  );
                                 } else {
                                   Navigator.pop(context);
                                   log('Please verify email'); //Pop up required
                                   //showMessager("A verification link was sent to your email. Click on it to continue login. If you have not received the link, kindly press resend.");
                                   //Ok Button
                                   //Resend verification with on click methods
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                          const Navigation()));
+                                  Navigator.of(context)
+                                      .pushNamedAndRemoveUntil(
+                                    LoadingPage.route,
+                                        (Route<dynamic> route) => false,
+                                  );
                                 }
                               } else {
                                 Navigator.pop(context);

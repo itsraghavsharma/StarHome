@@ -305,24 +305,24 @@ class _RegisterPageState extends State<RegisterPage> {
                       ),
                     ),
                   ),
-                  Row(
-                    children: [
-                      SizedBox(
-                        width: 40.h,
-                      ),
-                      const Text("Are you a VITian?"),
-                      Switch(
-                        activeColor: Colors.green,
-                        value: _switchValue,
-                        onChanged: (value) {
-                          setState(() {
-                            print("VALUE : $value");
-                            _switchValue = value;
-                          });
-                        },
-                      )
-                    ],
-                  ),
+                  // Row(
+                  //   children: [
+                  //     SizedBox(
+                  //       width: 40.h,
+                  //     ),
+                  //     const Text("Are you a VITian?"),
+                  //     Switch(
+                  //       activeColor: Colors.green,
+                  //       value: _switchValue,
+                  //       onChanged: (value) {
+                  //         setState(() {
+                  //           print("VALUE : $value");
+                  //           _switchValue = value;
+                  //         });
+                  //       },
+                  //     )
+                  //   ],
+                  // ),
                   if (_switchValue == true)
                     InputContainer(
                       child: TextField(

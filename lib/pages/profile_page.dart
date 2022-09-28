@@ -35,7 +35,6 @@ Map<String, dynamic> AllData = {
   'profilePic': '',
   'phone': 'Loading...'
 };
-
 void _onPressed() {
   var firebaseUser = FirebaseAuth.instance.currentUser;
   firestoreInstance
@@ -44,7 +43,9 @@ void _onPressed() {
       .get()
       .then((value) {
     print(value.data());
+    AllData = value.data()!;
   });
+
 }
 
 class ProfilePage extends StatelessWidget {
@@ -54,7 +55,7 @@ class ProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     CollectionReference users = FirebaseFirestore.instance.collection('users');
-
+    _onPressed();
     final totalWidth = MediaQuery.of(context).size.width;
     final totalHeight = MediaQuery.of(context).size.height;
 
@@ -73,7 +74,7 @@ class ProfilePage extends StatelessWidget {
             ),
             const AppBackButton(),
             Positioned(
-                right: totalWidth * 0.05,
+                right: totalWidth * 0.04,
                 top: totalWidth * 0.05,
                 child: IconButton(
                   icon: const Icon(
@@ -198,15 +199,23 @@ class ProfilePage extends StatelessWidget {
             ),
             Align(
               alignment: Alignment.bottomCenter,
-              child: Image.asset(
-                "assets/images/profile.png",
-                height: totalHeight * 0.35,
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: CircleAvatar(
+                  radius: totalHeight * 0.1,
+                  backgroundImage:
+                  AssetImage('assets/images/logo.jpeg'),
+                ),
               ),
             ),
+
             Align(
               alignment: Alignment.bottomCenter,
               child:
-              Text("© 2022 Android Club VIT Bhopal. All Rights Reserved"),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text("© 2022 Star Home. All Rights Reserved"),
+              ),
             )
           ]),
         ),

@@ -4,20 +4,22 @@ import "package:flutter/material.dart";
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class AccessoryCard extends StatelessWidget {
+class BlockCard extends StatelessWidget {
 
 
   // final EventModal event;
   // const AccessoryCard({Key? key, required this.event}) : super(key: key);
   final String text1;
-  const AccessoryCard({Key? key, text, required this.text1}) : super(key: key);
+  const BlockCard({Key? key, text, required this.text1}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final totalHeight = MediaQuery.of(context).size.height;
 
-    return Container(
+    return Scaffold(
+      body: Container(
         height: 200,
+        width: 200,
         padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 10),
         child: Stack(alignment: Alignment.bottomLeft, children: [
           Hero(
@@ -88,9 +90,7 @@ class AccessoryCard extends StatelessWidget {
             ),
           )
         ]),
-      );
-
-
-
+      ),
+    );
   }
 }

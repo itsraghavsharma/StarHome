@@ -70,7 +70,7 @@ class _MyAppState extends State<MyApp> {
 
         builder: (BuildContext context,child) => MaterialApp(
         debugShowCheckedModeBanner: false,
-        title: "Android Club",
+        title: "Star Home",
         theme: ThemeData(
             primaryColor: AppColor.primary,
             secondaryHeaderColor: AppColor.secondary,
@@ -171,7 +171,7 @@ class _NavigationState extends State<Navigation> {
               return CircleAvatar(
                 radius: 70.0,
                 foregroundImage: CachedNetworkImageProvider('${dataa['profilePic']}'),
-                backgroundImage: AssetImage("assets/images/loader.gif"),
+                backgroundImage: AssetImage("assets/images/profile-icon.png"),
                 backgroundColor: Colors.transparent,
               );
             },
@@ -253,7 +253,7 @@ class _NavigationState extends State<Navigation> {
   Widget bottomNav(height, width) {
     return Container(
       height: AppDimens.bottomNavHeight,
-      margin: EdgeInsets.symmetric(horizontal: width, vertical: height),
+      //margin: EdgeInsets.symmetric(horizontal: width, vertical: height),
       decoration: const BoxDecoration(
         color: Colors.transparent,
         borderRadius: BorderRadius.only(
@@ -261,12 +261,14 @@ class _NavigationState extends State<Navigation> {
         ),
       ),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(AppDimens.bottomNavCRaduis),
+        borderRadius: BorderRadius.only(
+      topRight: Radius.circular(30),topLeft: Radius.circular(30),
+    ),
         child: BottomNavigationBar(
           type: BottomNavigationBarType.fixed,
           showSelectedLabels: true,
           showUnselectedLabels: true,
-          backgroundColor: AppColor.bottomBar,
+          backgroundColor: Colors.brown,
           selectedItemColor: Colors.white,
           unselectedItemColor: Colors.white.withOpacity(.60),
           selectedFontSize: 10,

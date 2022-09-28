@@ -37,7 +37,7 @@ class AboutPage extends StatelessWidget {
                         style: headingStyleWhite,
                       ),
                     ),
-                    Center(child: Image.asset("assets/ui/logo_bg.png"))
+                   // Center(child: Image.asset("assets/images/logo.jpeg"))
                   ],
                 ),
               ),
@@ -53,10 +53,10 @@ class AboutPage extends StatelessWidget {
                       padding:
                       EdgeInsets.symmetric(horizontal: totalWidth * 0.07),
                       child: Text(
-                        "We at Android Club are driven to achieve excellence and solve problems while at it. Dedicated to educating and creating awareness about modern Mobile App development, we host workshops,",
+                        "Under Construction, Star Home Team",
                         softWrap: true,
                         textAlign: TextAlign.justify,
-                        style: TextStyle(height: totalHeight * 0.002),
+                        style: TextStyle(height: totalHeight * 0.01),
                       ),
                     ),
                     Row(
@@ -67,18 +67,18 @@ class AboutPage extends StatelessWidget {
                             padding: EdgeInsets.symmetric(
                                 horizontal: totalWidth * 0.07),
                             child: Text(
-                              "hackathons, webinars, and all possible events under the sun, that help us build an inclusive community of like-minded people who explore and learn together. So, wear your thinking caps, put on some creativity, and let's develop some amazing apps!",
+                              "Project Exhibition, Under Dr. Gopal Singh Tandel",
                               softWrap: true,
                               textAlign: TextAlign.justify,
-                              style: TextStyle(height: totalHeight * 0.002),
+                              style: TextStyle(height: totalHeight * 0.03),
                             ),
                           ),
                         ),
-                        Image.asset(
-                          "assets/images/about1.png",
-                          height: totalHeight * 0.36,
-                          width: totalHeight * 0.2,
-                        ),
+                        // Image.asset(
+                        //   "assets/images/about1.png",
+                        //   height: totalHeight * 0.36,
+                        //   width: totalHeight * 0.2,
+                        // ),
                       ],
                     ),
                   ])

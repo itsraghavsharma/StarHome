@@ -50,7 +50,10 @@ class _AddRegister extends State<AdditionalRegister> {
     log('Almost there!');
     //await initRetrievalTeam();
     log('Getting You to Home page');
-    //Navigator.popAndPushNamed(context, Navigation.route);
+    Navigator.of(context).pushNamedAndRemoveUntil(
+      Navigation.route,
+          (Route<dynamic> route) => false,
+    );
   }
 
   @override
@@ -125,24 +128,24 @@ class _AddRegister extends State<AdditionalRegister> {
                       ),
                     ),
                   ),
-                  Row(
-                    children: [
-                      const SizedBox(
-                        width: 40,
-                      ),
-                      const Text("Are you a vitian?"),
-                      Switch(
-                        activeColor: AppColor.primary,
-                        value: _switchValue,
-                        onChanged: (value) {
-                          setState(() {
-                            //print("VALUE : $value");
-                            _switchValue = value;
-                          });
-                        },
-                      )
-                    ],
-                  ),
+                  // Row(
+                  //   children: [
+                  //     const SizedBox(
+                  //       width: 40,
+                  //     ),
+                  //   const Text("Are you a vitian?"),
+                  //     Switch(
+                  //       activeColor: AppColor.primary,
+                  //       value: _switchValue,
+                  //       onChanged: (value) {
+                  //         setState(() {
+                  //           //print("VALUE : $value");
+                  //           _switchValue = value;
+                  //         });
+                  //       },
+                  //     )
+                  //   ],
+                  // ),
                   if (_switchValue == true)
                     InputContainer(
                       child: TextField(

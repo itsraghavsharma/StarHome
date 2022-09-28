@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "99059728812",
+    "firebase_url": "https://starhome-2a781-default-rtdb.asia-southeast1.firebasedatabase.app",
     "project_id": "starhome-2a781",
     "storage_bucket": "starhome-2a781.appspot.com"
   },
@@ -13,6 +14,14 @@
         }
       },
       "oauth_client": [
+        {
+          "client_id": "99059728812-evi3nb4i2d7vj5og4jbdchc1i0p531n6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.itsraghav.star_home",
+            "certificate_hash": "e579a232a366fe991891a967405bfb07c060ecb9"
+          }
+        },
         {
           "client_id": "99059728812-bv4m8bhkgb9fk47fketdu4i99foaom58.apps.googleusercontent.com",
           "client_type": 3
